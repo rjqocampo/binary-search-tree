@@ -1,3 +1,13 @@
+function createRandomArray() {
+  const arr = [];
+
+  for (let i = 0; i < 10; i++) {
+    arr.push(Math.floor(Math.random() * 10));
+  }
+
+  return arr;
+}
+
 function createNode(input) {
   const data = input;
   const left = null;
@@ -19,10 +29,47 @@ function createTree(arr) {
     return node;
   }
 
-  const n = arr.length;
-  const root = buildTree(arr, 0, n - 1);
+  function bubbleSort(arr) {
+    const len = arr.length;
+    let swapped;
 
-  console.log(root);
+    for (let i = 0; i < len - 1; i++) {
+      swapped = false;
+      for (let j = 0; j < len - 1 - i; j++) {
+        if (arr[j] > arr[j + 1]) {
+          const temp = arr[j];
+          arr[j] = arr[j + 1];
+          arr[j + 1] = temp;
+
+          swapped = true;
+        }
+      }
+
+      if (!swapped) {
+        break;
+      }
+    }
+
+    return arr;
+  }
+
+  function removeDupe(arr) {
+    const unique = [];
+
+    arr.forEach((data) => {
+      if (!unique.includes(data)) {
+        unique.push(data);
+      }
+    });
+
+    return unique;
+  }
+
+  const array = bubbleSort(arr);
+  console.log(array);
+  const array2 = removeDupe(array);
+  console.log(array2);
+  const root = buildTree(arr, 0, arr.length - 1);
 
   const prettyPrint = (node = root, prefix = "", isLeft = true) => {
     if (node === null) {
@@ -40,6 +87,8 @@ function createTree(arr) {
   return { prettyPrint };
 }
 
-const testArray = [1, 2, 3, 4, 5, 6, 7];
-const bst = createTree(testArray);
+const orderedTestArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const randomTestArray = createRandomArray();
+
+const bst = createTree(randomTestArray);
 bst.prettyPrint();
