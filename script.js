@@ -15,6 +15,10 @@ function createNode(input) {
   return { data, left, right };
 }
 
+function read(node) {
+  console.log(node.data);
+}
+
 function createTree(arr) {
   function buildTree(arr, start, end) {
     if (start > end) {
@@ -146,15 +150,38 @@ function createTree(arr) {
     }
   }
 
-  return { prettyPrint, insertNode, deleteNode };
+  function levelOrder(callback, node = root) {
+    let arr = [];
+    let queue = [];
+
+    if (node === null) return;
+
+    queue.push(node);
+
+    while (queue.length !== 0) {
+      let current = queue.shift();
+
+      if (callback) {
+        callback(current);
+      }
+
+      if (current.left !== null) queue.push(current.left);
+      if (current.right !== null) queue.push(current.right);
+      arr.push(current.data);
+    }
+
+    return arr;
+  }
+
+  return { prettyPrint, insertNode, deleteNode, levelOrder };
 }
 
 const orderedTestArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const randomTestArray = createRandomArray();
 
 const bst = createTree(orderedTestArray);
-bst.deleteNode(5);
 bst.prettyPrint();
+console.log(bst.levelOrder(read));
 
 /* 
 Must check if existing value before inserting
