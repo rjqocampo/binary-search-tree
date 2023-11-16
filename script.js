@@ -1,8 +1,8 @@
 function createRandomArray() {
   const arr = [];
 
-  for (let i = 0; i < 10; i++) {
-    arr.push(Math.floor(Math.random() * 10));
+  for (let i = 0; i < 15; i++) {
+    arr.push(Math.floor(Math.random() * 15));
   }
 
   return arr;
@@ -65,11 +65,10 @@ function createTree(arr) {
     return unique;
   }
 
-  const array = bubbleSort(arr);
-  console.log(array);
-  const array2 = removeDupe(array);
-  console.log(array2);
-  const root = buildTree(arr, 0, arr.length - 1);
+  console.log("Original", arr);
+  const array = removeDupe(bubbleSort(arr));
+  console.log("Parsed", array);
+  const root = buildTree(array, 0, array.length - 1);
 
   const prettyPrint = (node = root, prefix = "", isLeft = true) => {
     if (node === null) {
@@ -84,11 +83,36 @@ function createTree(arr) {
     }
   };
 
-  return { prettyPrint };
+  function insert(input, node = root) {
+    console.log(node);
+    if (node === null) {
+      node = createNode(input);
+      return node;
+    }
+
+    if (input === node.data) {
+      console.log("Existing node");
+    }
+
+    if (input < node.data) {
+      node.left = insert(input, node.left);
+    } else if (input > node.data) {
+      node.right = insert(input, node.right);
+    }
+
+    return node;
+  }
+
+  return { prettyPrint, insert };
 }
 
-const orderedTestArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const orderedTestArray = [2, 3, 4, 5, 6, 7, 8, 9, 10];
 const randomTestArray = createRandomArray();
 
-const bst = createTree(randomTestArray);
+const bst = createTree(orderedTestArray);
+bst.insert(1);
 bst.prettyPrint();
+
+/* 
+Must check if existing value before inserting
+*/
