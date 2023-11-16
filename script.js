@@ -193,7 +193,24 @@ function createTree(arr) {
     return array;
   }
 
-  return { prettyPrint, insertNode, deleteNode, levelOrder, preOrder };
+  function inOrder(callback, node = root, arr) {
+    let array = arr || [];
+    if (node === null) return [];
+
+    inOrder(callback, node.left, array);
+
+    if (callback) {
+      array.push(callback(node));
+    } else {
+      array.push(node.data);
+    }
+
+    inOrder(callback, node.right, array);
+
+    return array;
+  }
+
+  return { prettyPrint, insertNode, deleteNode, levelOrder, preOrder, inOrder };
 }
 
 const orderedTestArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -202,7 +219,8 @@ const randomTestArray = createRandomArray();
 const bst = createTree(orderedTestArray);
 bst.prettyPrint();
 // console.log(bst.levelOrder(read));
-console.log(bst.preOrder(timesTwo));
+// console.log(bst.preOrder(timesTwo));
+console.log(bst.inOrder(timesTwo));
 
 /* 
 Must check if existing value before inserting
