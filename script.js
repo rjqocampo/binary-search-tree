@@ -226,10 +226,28 @@ function createTree(arr) {
     return array;
   }
 
+  function find(input, node = root) {
+    if (node === null) return;
+
+    if (input === node.data) {
+      console.log(input);
+      return node;
+    }
+
+    let a = find(input, node.left);
+    if (a) return a;
+
+    let b = find(input, node.right);
+    if (b) return b;
+
+    return "Not found";
+  }
+
   return {
     prettyPrint,
     insertNode,
     deleteNode,
+    find,
     levelOrder,
     preOrder,
     inOrder,
@@ -245,7 +263,8 @@ bst.prettyPrint();
 // console.log(bst.levelOrder(read));
 // console.log(bst.preOrder());
 // console.log(bst.inOrder());
-console.log(bst.postOrder());
+// console.log(bst.postOrder());
+console.log(bst.find(11));
 
 /* 
 Must check if existing value before inserting
