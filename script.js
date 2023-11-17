@@ -2,7 +2,7 @@ function createRandomArray() {
   const arr = [];
 
   for (let i = 0; i < 15; i++) {
-    arr.push(Math.floor(Math.random() * 15));
+    arr.push(Math.floor(Math.random() * 10));
   }
 
   return arr;
@@ -154,6 +154,22 @@ function createTree(arr) {
     }
   }
 
+  function find(input, node = root) {
+    if (node === null) return;
+
+    if (input === node.data) {
+      return node;
+    }
+
+    let a = find(input, node.left);
+    if (a) return a;
+
+    let b = find(input, node.right);
+    if (b) return b;
+
+    return null;
+  }
+
   function levelOrder(callback, node = root) {
     let arr = [];
     let queue = [];
@@ -226,21 +242,31 @@ function createTree(arr) {
     return array;
   }
 
-  function find(input, node = root) {
-    if (node === null) return;
+  function height(node = root) {
+    if (node === null) return -1;
+    let a = height(node.left);
+    let b = height(node.right);
+    console.log(a, b);
+    return Math.max(a, b) + 1;
+  }
 
-    if (input === node.data) {
-      console.log(input);
-      return node;
+  function depth(input, node = root, edge) {
+    let total = edge + 1 || 0;
+
+    if (node === null) return;
+    console.log(total, node);
+
+    if (input === node) {
+      console.log("match", node.data);
+      console.log("edge", edge);
+      return total;
     }
 
-    let a = find(input, node.left);
+    let a = depth(input, node.left, total);
     if (a) return a;
 
-    let b = find(input, node.right);
+    let b = depth(input, node.right, total);
     if (b) return b;
-
-    return "Not found";
   }
 
   return {
@@ -252,9 +278,12 @@ function createTree(arr) {
     preOrder,
     inOrder,
     postOrder,
+    height,
+    depth,
   };
 }
 
+const testArray = [1, 2, 3];
 const orderedTestArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 const randomTestArray = createRandomArray();
 
@@ -264,7 +293,9 @@ bst.prettyPrint();
 // console.log(bst.preOrder());
 // console.log(bst.inOrder());
 // console.log(bst.postOrder());
-console.log(bst.find(11));
+// console.log(bst.find(3));
+// console.log(bst.height(bst.find(5)));
+console.log(bst.depth(bst.find(8)));
 
 /* 
 Must check if existing value before inserting
