@@ -2,7 +2,7 @@ function createRandomArray() {
   const arr = [];
 
   for (let i = 0; i < 15; i++) {
-    arr.push(Math.floor(Math.random() * 10));
+    arr.push(Math.floor(Math.random() * 100));
   }
 
   return arr;
@@ -118,39 +118,43 @@ function createTree(arr) {
     if (input < node.data) {
       node.left = deleteNode(input, node.left);
       return node;
-    } else if (input > node.data) {
+    }
+    if (input > node.data) {
       node.right = deleteNode(input, node.right);
       return node;
     }
 
     if (node.left === null) {
-      let temp = node.right;
-      delete node;
+      const temp = node.right;
+      // delete node;
+      node = null;
       return temp;
-    } else if (node.right === null) {
-      let temp = node.left;
-      delete node;
-      return temp;
-    } else {
-      let succParent = node;
-      let succ = node.right;
-
-      while (succ.left !== null) {
-        succParent = succ;
-        succ = succ.left;
-      }
-
-      if (succParent !== node) {
-        succParent.left = succ.right;
-      } else {
-        succParent.right = succ.right;
-      }
-
-      node.data = succ.data;
-
-      delete succ;
-      return node;
     }
+    if (node.right === null) {
+      const temp = node.left;
+      // delete node;
+      node = null;
+      return temp;
+    }
+    let succParent = node;
+    let succ = node.right;
+
+    while (succ.left !== null) {
+      succParent = succ;
+      succ = succ.left;
+    }
+
+    if (succParent !== node) {
+      succParent.left = succ.right;
+    } else {
+      succParent.right = succ.right;
+    }
+
+    node.data = succ.data;
+
+    // delete succ;
+    succ = null;
+    return node;
   }
 
   function find(input, node = root) {
@@ -160,25 +164,25 @@ function createTree(arr) {
       return node;
     }
 
-    let a = find(input, node.left);
+    const a = find(input, node.left);
     if (a) return a;
 
-    let b = find(input, node.right);
+    const b = find(input, node.right);
     if (b) return b;
 
     return null;
   }
 
   function levelOrder(callback, node = root) {
-    let arr = [];
-    let queue = [];
+    const arr = [];
+    const queue = [];
 
     if (node === null) return;
 
     queue.push(node);
 
     while (queue.length !== 0) {
-      let current = queue.shift();
+      const current = queue.shift();
 
       if (callback) {
         callback(current);
@@ -192,8 +196,8 @@ function createTree(arr) {
     return arr;
   }
 
-  function preOrder(callback, node = root, arr) {
-    let array = arr || [];
+  function preOrder(node = root, callback, arr) {
+    const array = arr || [];
     if (node === null) return [];
 
     if (callback) {
@@ -202,17 +206,17 @@ function createTree(arr) {
       array.push(node.data);
     }
 
-    preOrder(callback, node.left, array);
-    preOrder(callback, node.right, array);
+    preOrder(node.left, callback, array);
+    preOrder(node.right, callback, array);
 
     return array;
   }
 
-  function inOrder(callback, node = root, arr) {
-    let array = arr || [];
+  function inOrder(node = root, callback, arr) {
+    const array = arr || [];
     if (node === null) return [];
 
-    inOrder(callback, node.left, array);
+    inOrder(node.left, callback, array);
 
     if (callback) {
       array.push(callback(node));
@@ -220,17 +224,17 @@ function createTree(arr) {
       array.push(node.data);
     }
 
-    inOrder(callback, node.right, array);
+    inOrder(node.right, callback, array);
 
     return array;
   }
 
-  function postOrder(callback, node = root, arr) {
-    let array = arr || [];
+  function postOrder(node = root, callback, arr) {
+    const array = arr || [];
     if (node === null) return [];
 
-    postOrder(callback, node.left, array);
-    postOrder(callback, node.right, array);
+    postOrder(node.left, callback, array);
+    postOrder(node.right, callback, array);
 
     if (callback) {
       array.push(callback(node));
@@ -243,13 +247,13 @@ function createTree(arr) {
 
   function height(node = root) {
     if (node === null) return -1;
-    let a = height(node.left);
-    let b = height(node.right);
+    const a = height(node.left);
+    const b = height(node.right);
     return Math.max(a, b) + 1;
   }
 
   function depth(input, node = root, edge) {
-    let total = edge + 1 || 0;
+    const total = edge + 1 || 0;
 
     if (node === null) return;
 
@@ -257,10 +261,10 @@ function createTree(arr) {
       return total;
     }
 
-    let a = depth(input, node.left, total);
+    const a = depth(input, node.left, total);
     if (a) return a;
 
-    let b = depth(input, node.right, total);
+    const b = depth(input, node.right, total);
     if (b) return b;
   }
 
@@ -289,23 +293,24 @@ function createTree(arr) {
 
     if (node === null) return true;
 
-    let leftHeight = bst.height(node.left);
-    let rightHeight = bst.height(node.right);
-    let difference = Math.abs(leftHeight - rightHeight);
-
-    console.log(
-      `Node: ${node.data} || A:${leftHeight} B:${rightHeight} || Diff: ${difference}`,
-    );
+    const leftHeight = height(node.left);
+    const rightHeight = height(node.right);
+    const difference = Math.abs(leftHeight - rightHeight);
 
     if (difference >= 2) {
-      console.log("unbalanced");
       return false;
     }
 
-    let leftBalance = isBalanced(node.left);
-    let rightBalance = isBalanced(node.right);
+    const leftBalance = isBalanced(node.left);
+    const rightBalance = isBalanced(node.right);
 
     return leftBalance && rightBalance;
+  }
+
+  function rebalance(node = root) {
+    const arr = inOrder();
+    const newTree = buildTree(arr, 0, arr.length - 1);
+    return newTree;
   }
 
   return {
@@ -320,27 +325,8 @@ function createTree(arr) {
     height,
     depth,
     isBalanced,
+    rebalance,
   };
 }
 
-const testArray = [1, 2, 3];
-const orderedTestArray = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20];
-const randomTestArray = createRandomArray();
-
-const bst = createTree(orderedTestArray);
-// bst.insertNode(9);
-// bst.insertNode(21);
-// console.log(bst.insertNode(13));
-bst.prettyPrint();
-// console.log(bst.levelOrder(read));
-// console.log(bst.preOrder());
-// console.log(bst.inOrder());
-// console.log(bst.postOrder());
-// console.log(bst.find(3));
-// console.log(bst.height(bst.find(5)));
-// console.log(bst.depth(bst.find(10)));
-console.log(bst.isBalanced());
-
-/* 
-Must check if existing value before inserting
-*/
+export { createRandomArray, createTree };
