@@ -254,11 +254,8 @@ function createTree(arr) {
     let total = edge + 1 || 0;
 
     if (node === null) return;
-    console.log(total, node);
 
     if (input === node) {
-      console.log("match", node.data);
-      console.log("edge", edge);
       return total;
     }
 
@@ -267,6 +264,16 @@ function createTree(arr) {
 
     let b = depth(input, node.right, total);
     if (b) return b;
+  }
+
+  function isBalanced() {
+    /* 
+      I: always BST root
+      O: true or false
+      Problem: get all heights, check difference should not be more than 1
+      
+
+    */
   }
 
   return {
@@ -295,7 +302,7 @@ bst.prettyPrint();
 // console.log(bst.postOrder());
 // console.log(bst.find(3));
 // console.log(bst.height(bst.find(5)));
-console.log(bst.depth(bst.find(8)));
+// console.log(bst.depth(bst.find(9)));
 
 /* 
 Must check if existing value before inserting
