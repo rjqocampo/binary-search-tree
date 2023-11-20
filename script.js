@@ -75,7 +75,6 @@ function createTree(arr) {
 
   console.log("Original", arr);
   const array = removeDupe(bubbleSort(arr));
-  console.log("Parsed", array);
   const root = buildTree(array, 0, array.length - 1);
 
   const prettyPrint = (node = root, prefix = "", isLeft = true) => {
@@ -92,9 +91,9 @@ function createTree(arr) {
   };
 
   function insertNode(input, node = root) {
-    console.log(node);
     if (node === null) {
       node = createNode(input);
+      console.log(`Insert node: ${input}`);
       return node;
     }
 
@@ -246,7 +245,6 @@ function createTree(arr) {
     if (node === null) return -1;
     let a = height(node.left);
     let b = height(node.right);
-    console.log(a, b);
     return Math.max(a, b) + 1;
   }
 
@@ -266,14 +264,48 @@ function createTree(arr) {
     if (b) return b;
   }
 
-  function isBalanced() {
+  function isBalanced(node = root) {
     /* 
-      I: always BST root
-      O: true or false
-      Problem: get all heights, check difference should not be more than 1
-      
+      Write an isBalanced function that checks if the tree is balanced. A balanced tree is one where the difference between heights of the left subtree and the right subtree of every node is not more than 1.
 
+      I: bst root
+      O: true or false
+
+      Problem: 
+      must get heights, check their difference, should not be more than 1
+
+      Pseudocode:
+      Traverse leaf and return height of each leaf
+      Store the height of leaf
+      Check difference
+
+      Current Challenges:
+      How to evaluate to true or false while returning height in my base case
+      Difference will evaluate to 2 or more if long list. See Node 6
+
+      Notes:
+      When a recursive call evaluates to false, just bubble it up don't compare
     */
+
+    if (node === null) return true;
+
+    let leftHeight = bst.height(node.left);
+    let rightHeight = bst.height(node.right);
+    let difference = Math.abs(leftHeight - rightHeight);
+
+    console.log(
+      `Node: ${node.data} || A:${leftHeight} B:${rightHeight} || Diff: ${difference}`,
+    );
+
+    if (difference >= 2) {
+      console.log("unbalanced");
+      return false;
+    }
+
+    let leftBalance = isBalanced(node.left);
+    let rightBalance = isBalanced(node.right);
+
+    return leftBalance && rightBalance;
   }
 
   return {
@@ -287,14 +319,18 @@ function createTree(arr) {
     postOrder,
     height,
     depth,
+    isBalanced,
   };
 }
 
 const testArray = [1, 2, 3];
-const orderedTestArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+const orderedTestArray = [2, 4, 6, 8, 10, 12, 14, 16, 18, 20];
 const randomTestArray = createRandomArray();
 
 const bst = createTree(orderedTestArray);
+// bst.insertNode(9);
+// bst.insertNode(21);
+// console.log(bst.insertNode(13));
 bst.prettyPrint();
 // console.log(bst.levelOrder(read));
 // console.log(bst.preOrder());
@@ -302,7 +338,8 @@ bst.prettyPrint();
 // console.log(bst.postOrder());
 // console.log(bst.find(3));
 // console.log(bst.height(bst.find(5)));
-// console.log(bst.depth(bst.find(9)));
+// console.log(bst.depth(bst.find(10)));
+console.log(bst.isBalanced());
 
 /* 
 Must check if existing value before inserting
