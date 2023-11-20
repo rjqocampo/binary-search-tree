@@ -173,7 +173,7 @@ function createTree(arr) {
     return null;
   }
 
-  function levelOrder(callback, node = root) {
+  function levelOrder(node = root, callback) {
     const arr = [];
     const queue = [];
 

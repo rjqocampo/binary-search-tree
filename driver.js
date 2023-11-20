@@ -21,7 +21,7 @@ bst.prettyPrint();
 
 console.log(bst.isBalanced(bst.rebalance()));
 bst.prettyPrint(bst.rebalance());
-console.log(bst.levelOrder());
-console.log(bst.preOrder());
-console.log(bst.inOrder());
-console.log(bst.postOrder());
+console.log(bst.levelOrder(bst.rebalance()));
+console.log(bst.preOrder(bst.rebalance()));
+console.log(bst.inOrder(bst.rebalance()));
+console.log(bst.postOrder(bst.rebalance()));
